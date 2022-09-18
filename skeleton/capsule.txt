@@ -1,0 +1,5 @@
+
+@def CapsuleName
+@end
+
+@export default CapsuleName
