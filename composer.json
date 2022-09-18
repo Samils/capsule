@@ -1,0 +1,49 @@
+{
+	"name": "php_modules/capsule",
+	"version": "1.0.0",
+	"description": "capsule view engine for Samils",
+  "type": "library",
+	"license": "MIT",
+	"keywords": [
+		"gogue",
+		"capsule"
+	],
+	"autoload": {
+		"psr-4": {
+      "Sammy\\": "Sammy/",
+      "App\\": "App/",
+      "Capsule\\": "src/Capsule/"
+    },
+		"psr-0": {
+      "Sammy\\": "Sammy/",
+      "App\\": "App/",
+      "Capsule\\": "src/Capsule/"
+    },
+		"files": [
+			"autoload.php"
+		]
+	},
+  "homepage": "https://github.com/samils/capsule",
+  "readme": "./README.md",
+  "authors": [
+    {
+      "name": "Agostinho Lopes",
+      "email": "agostinhosaml832@gmail.com",
+      "homepage": "https://agostinhosamil.github.io",
+      "role": "Developer"
+    }
+  ],
+  "support": {
+    "email": "base.samils@gmail.com",
+    "issues": "https://github.com/samils/capsule/issues",
+    "wiki": "https://github.com/samils/capsule/wiki"
+  },
+	"require": {
+		"php": ">=5.6.20"
+	},
+  "suggest": {
+    "php_modules/core": "",
+    "php_modules/include-all": "",
+    "php_modules/fs": ""
+  }
+}
