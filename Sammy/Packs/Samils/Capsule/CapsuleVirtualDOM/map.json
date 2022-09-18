@@ -1,0 +1,20 @@
+[
+  {
+    "component": "App",
+    "props": {
+      "title": "Home App - Foo Bar",
+      "data": []
+    },
+    "children": [
+      {
+        "element": "div",
+        "props": {},
+        "children": [
+          // element
+          // component
+          // ...
+        ]
+      }
+    ]
+  }
+]
