@@ -5,7 +5,7 @@
  *
  * @keywords Samils, ils, php framework
  * -----------------
- * @package Sammy\Packs\Samils\Capsule
+ * @package App\View\CapsuleHelper\ArrayHelper
  * - Autoload, application dependencies
  *
  * MIT License
@@ -30,20 +30,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace Sammy\Packs\Samils\Capsule {
+namespace App\View\CapsuleHelper\ArrayHelper {
   /**
-   * Make sure the module base internal class is not
-   * declared in the php global scope defore creating
+   * Make sure the module base internal trait is not
+   * declared in the php global Base defore creating
    * it.
    * It ensures that the script flux is not interrupted
    * when trying to run the current command by the cli
    * API.
    */
-  if (!class_exists ('Sammy\Packs\Samils\Capsule\CapsuleAttributeParser')) {
+  if (!trait_exists ('App\View\CapsuleHelper\ArrayHelper\Base')) {
   /**
-   * @class CapsuleAttributeParser
-   * Base internal class for the
-   * Samils\Capsule module.
+   * @trait Base
+   * Base internal trait for the
+   * CapsuleHelper\ArrayHelper module.
    * -
    * This is (in the ils environment)
    * an instance of the php module,
@@ -56,7 +56,35 @@ namespace Sammy\Packs\Samils\Capsule {
    * and boot it by using the ils directory boot.
    * -
    */
-  class CapsuleAttributeParser {
-    use CapsuleAttributeParser\Base;
+  trait Base {
+    /**
+     * @method array PropsBeyond
+     *
+     * @param array $excludeList
+     *  - A list of items to exclude
+     *  - from the given array
+     * @param array $array
+     */
+    public static function PropsBeyond ($excludeList, $array = []) {
+      if (!is_array ($excludeList)) {
+        $excludeList = [];
+      }
+
+      if (!is_array ($array) && $array) {
+        return [];
+      }
+
+      $arrayKeys = array_keys ($array);
+      $arrayKeysCount = count ($arrayKeys);
+      $props = [];
+
+      for ($i = 0; $i < $arrayKeysCount; $i++) {
+        if (!in_array ($arrayKeys [$i], $excludeList)) {
+          $props [$arrayKeys [$i]] = $array [$arrayKeys [$i]];
+        }
+      }
+
+      return $props;
+    }
   }}
 }

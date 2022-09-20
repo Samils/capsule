@@ -5,7 +5,7 @@
  *
  * @keywords Samils, ils, php framework
  * -----------------
- * @package Sammy\Packs\CapsuleHelper
+ * @package App\View\CapsuleHelper
  * - Autoload, application dependencies
  *
  * MIT License
@@ -30,7 +30,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace Sammy\Packs\CapsuleHelper {
+namespace App\View\CapsuleHelper {
   /**
    * Make sure the module base internal class is not
    * declared in the php global scope defore creating
@@ -39,7 +39,7 @@ namespace Sammy\Packs\CapsuleHelper {
    * when trying to run the current command by the cli
    * API.
    */
-  if (!class_exists ('Sammy\Packs\CapsuleHelper\ObjectHelper')){
+  if (!class_exists ('App\View\CapsuleHelper\ObjectHelper')){
   /**
    * @class ObjectHelper
    * Base internal class for the
@@ -56,51 +56,7 @@ namespace Sammy\Packs\CapsuleHelper {
    * and boot it by using the ils directory boot.
    * -
    */
-  abstract class ObjectHelper {
-    /**
-     * @method mixed ReadProperty
-     */
-    public static function ReadProperty ($object, string $propertyRef = '') {
-      if (!self::isArrayOrObject ($object)) {
-        return null;
-      } elseif (empty ($propertyRef)) {
-        return $propertyRef;
-      }
-
-      $currentObject = $object;
-
-      $propertyRefSlices = preg_split ('/\./', $propertyRef);
-
-      foreach ($propertyRefSlices as $i => $propertyRefSlice) {
-        switch (gettype ($currentObject)) {
-          case 'array':
-            if (isset ($currentObject [$propertyRefSlice]) && (self::isArrayOrObject ($currentObject [$propertyRefSlice]) || $i + 1 >= count ($propertyRefSlices))) {
-              $currentObject = $currentObject [$propertyRefSlice];
-            } else {
-              return;
-            }
-            break;
-
-          case 'object':
-            if (isset ($currentObject->$propertyRefSlice) && (self::isArrayOrObject ($currentObject->$propertyRefSlice) || $i + 1 >= count ($propertyRefSlices))) {
-              $currentObject = $currentObject->$propertyRefSlice;
-            } else {
-              return;
-            }
-
-            break;
-
-          default:
-            return null;
-            break;
-        }
-      }
-
-      return $currentObject;
-    }
-
-    private static function isArrayOrObject ($object) {
-      return (bool)((is_array ($object)) || is_object ($object));
-    }
+  class ObjectHelper {
+    use ObjectHelper\Base;
   }}
 }

@@ -5,7 +5,7 @@
  *
  * @keywords Samils, ils, php framework
  * -----------------
- * @package Sammy\Packs\CapsuleHelper
+ * @package App\View\CapsuleHelper
  * - Autoload, application dependencies
  *
  * MIT License
@@ -30,7 +30,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace Sammy\Packs\CapsuleHelper {
+namespace App\View\CapsuleHelper {
   /**
    * Make sure the module base internal class is not
    * declared in the php global scope defore creating
@@ -39,7 +39,7 @@ namespace Sammy\Packs\CapsuleHelper {
    * when trying to run the current command by the cli
    * API.
    */
-  if (!class_exists ('Sammy\Packs\CapsuleHelper\ArrayHelper')){
+  if (!class_exists ('App\View\CapsuleHelper\ArrayHelper')) {
   /**
    * @class ArrayHelper
    * Base internal class for the
@@ -56,37 +56,7 @@ namespace Sammy\Packs\CapsuleHelper {
    * and boot it by using the ils directory boot.
    * -
    */
-  abstract class ArrayHelper {
-    /**
-     * @method array PropsBeyond
-     *
-     * @param array $excludeList
-     *  - A list of items to exclude
-     *  - from the given array
-     * @param array $array
-     */
-    public static final function PropsBeyond ($excludeList, $array = []) {
-      $excludeList = !is_array ($excludeList) ? [] : (
-        $excludeList
-      );
-
-      if (!is_array ($array) && $array) {
-        return [];
-      }
-
-      $arrayKeys = array_keys ($array);
-      $arrayKeysCount = count ($arrayKeys);
-      $props = [];
-
-      for ($i = 0; $i < $arrayKeysCount; $i++) {
-        if (!in_array ($arrayKeys [ $i ], $excludeList)) {
-          $props [ $arrayKeys [ $i ] ] = $array [
-            $arrayKeys [ $i ]
-          ];
-        }
-      }
-
-      return $props;
-    }
+  class ArrayHelper {
+    use ArrayHelper\Base;
   }}
 }

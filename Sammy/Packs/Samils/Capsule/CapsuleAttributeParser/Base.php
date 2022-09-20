@@ -5,7 +5,7 @@
  *
  * @keywords Samils, ils, php framework
  * -----------------
- * @package Sammy\Packs\Samils\Capsule
+ * @package Sammy\Packs\Samils\Capsule\CapsuleAttributeParser
  * - Autoload, application dependencies
  *
  * MIT License
@@ -30,20 +30,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace Sammy\Packs\Samils\Capsule {
+namespace Sammy\Packs\Samils\Capsule\CapsuleAttributeParser {
   /**
-   * Make sure the module base internal class is not
+   * Make sure the module base internal trait is not
    * declared in the php global scope defore creating
    * it.
    * It ensures that the script flux is not interrupted
    * when trying to run the current command by the cli
    * API.
    */
-  if (!class_exists ('Sammy\Packs\Samils\Capsule\CapsuleAttributeParser')) {
+  if (!trait_exists ('Sammy\Packs\Samils\Capsule\CapsuleAttributeParser\Base')) {
   /**
-   * @class CapsuleAttributeParser
-   * Base internal class for the
-   * Samils\Capsule module.
+   * @trait Base
+   * Base internal trait for the
+   * Samils\Capsule\CapsuleAttributeParser module.
    * -
    * This is (in the ils environment)
    * an instance of the php module,
@@ -56,7 +56,44 @@ namespace Sammy\Packs\Samils\Capsule {
    * and boot it by using the ils directory boot.
    * -
    */
-  class CapsuleAttributeParser {
-    use CapsuleAttributeParser\Base;
+  trait Base {
+
+    public function shouldParseAttribute ($attribute = null) {
+      $method = join ('', [
+        'parse', ucfirst (strtolower ($attribute)),
+        'Attribute'
+      ]);
+
+      $shoudlParse = ( boolean ) method_exists ($this, $method);
+
+      return $shoudlParse ? $method : false;
+    }
+
+    public function parseAttribute ($attribute, $value) {
+      if ($method = $this->shouldParseAttribute ($attribute)) {
+        return call_user_func_array (
+          [ $this, $method ],
+          [ $value, $attribute ]
+        );
+      }
+
+      return [ $attribute, $value ];
+    }
+
+    public function parseStyleAttribute ($value = null) {
+      $styleValue = StyleAttributeParser::ParseStyleAttribute (
+        is_null ($value) ? [] : $value
+      );
+
+      return ['style', $styleValue];
+    }
+
+    public function parsetraitAttribute ($value) {
+      if (is_array ($value)) {
+        $value = join (' ', $value);
+      }
+
+      return ['trait', $value];
+    }
   }}
 }

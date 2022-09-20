@@ -5,7 +5,7 @@
  *
  * @keywords Samils, ils, php framework
  * -----------------
- * @package Sammy\Packs\Samils\Capsule
+ * @package App\View\CapsuleHelper\ObjectHelper
  * - Autoload, application dependencies
  *
  * MIT License
@@ -30,20 +30,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace Sammy\Packs\Samils\Capsule {
+namespace App\View\CapsuleHelper\ObjectHelper {
   /**
-   * Make sure the module base internal class is not
-   * declared in the php global scope defore creating
+   * Make sure the module base internal trait is not
+   * declared in the php global Base defore creating
    * it.
    * It ensures that the script flux is not interrupted
    * when trying to run the current command by the cli
    * API.
    */
-  if (!class_exists ('Sammy\Packs\Samils\Capsule\CapsuleAttributeParser')) {
+  if (!trait_exists ('App\View\CapsuleHelper\ObjectHelper\Base')) {
   /**
-   * @class CapsuleAttributeParser
-   * Base internal class for the
-   * Samils\Capsule module.
+   * @trait Base
+   * Base internal trait for the
+   * CapsuleHelper\ObjectHelper module.
    * -
    * This is (in the ils environment)
    * an instance of the php module,
@@ -56,7 +56,51 @@ namespace Sammy\Packs\Samils\Capsule {
    * and boot it by using the ils directory boot.
    * -
    */
-  class CapsuleAttributeParser {
-    use CapsuleAttributeParser\Base;
+  trait Base {
+    /**
+     * @method mixed ReadProperty
+     */
+    public static function ReadProperty ($object, string $propertyRef = '') {
+      if (!self::isArrayOrObject ($object)) {
+        return null;
+      } elseif (empty ($propertyRef)) {
+        return $propertyRef;
+      }
+
+      $currentObject = $object;
+
+      $propertyRefSlices = preg_split ('/\./', $propertyRef);
+
+      foreach ($propertyRefSlices as $i => $propertyRefSlice) {
+        switch (gettype ($currentObject)) {
+          case 'array':
+            if (isset ($currentObject [$propertyRefSlice]) && (self::isArrayOrObject ($currentObject [$propertyRefSlice]) || $i + 1 >= count ($propertyRefSlices))) {
+              $currentObject = $currentObject [$propertyRefSlice];
+            } else {
+              return;
+            }
+            break;
+
+          case 'object':
+            if (isset ($currentObject->$propertyRefSlice) && (self::isArrayOrObject ($currentObject->$propertyRefSlice) || $i + 1 >= count ($propertyRefSlices))) {
+              $currentObject = $currentObject->$propertyRefSlice;
+            } else {
+              return;
+            }
+
+            break;
+
+          default:
+            return null;
+            break;
+        }
+      }
+
+      return $currentObject;
+    }
+
+    private static function isArrayOrObject ($object) {
+      return (bool)((is_array ($object)) || is_object ($object));
+    }
   }}
 }

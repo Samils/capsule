@@ -5,7 +5,7 @@
  *
  * @keywords Samils, ils, php framework
  * -----------------
- * @package App\View\CapsuleHelper
+ * @package App\View\CapsuleHelper\CapsuleHelper
  * - Autoload, application dependencies
  *
  * MIT License
@@ -30,28 +30,29 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace App\View\CapsuleHelper {
+namespace App\View\CapsuleHelper\CapsuleHelper {
   use Closure;
   use Sammy\Packs\Samils\Capsule;
-  use Sammy\Packs\Samils\Capsule\Base;
   use Sammy\Packs\Samils\Capsule\CapsuleElement;
   use Sammy\Packs\Samils\Capsule\NativeHTMLCapsule;
+  use Sammy\Packs\Samils\Capsule\Base as CapsuleBase;
   use Sammy\Packs\Samils\Capsule\CapsuleScopeContext;
   use Sammy\Packs\Samils\Capsule\CapsuleYieldContext;
+  use Sammy\Packs\Samils\Capsule\CapsuleRenderContext;
   use Sammy\Packs\Samils\Capsule\CapsuleAttributeParser;
   /**
-   * Make sure the module base internal class is not
-   * declared in the php global scope defore creating
+   * Make sure the module base internal trait is not
+   * declared in the php global Base defore creating
    * it.
    * It ensures that the script flux is not interrupted
    * when trying to run the current command by the cli
    * API.
    */
-  if (!class_exists('App\View\CapsuleHelper\CapsuleHelper')){
+  if (!trait_exists ('App\View\CapsuleHelper\CapsuleHelper\Base')) {
   /**
-   * @class CapsuleHelper
-   * Base internal class for the
-   * CapsuleHelper module.
+   * @trait Base
+   * Base internal trait for the
+   * CapsuleHelper\CapsuleHelper module.
    * -
    * This is (in the ils environment)
    * an instance of the php module,
@@ -64,7 +65,7 @@ namespace App\View\CapsuleHelper {
    * and boot it by using the ils directory boot.
    * -
    */
-  abstract class CapsuleHelper {
+  trait Base {
     /**
      * @method string Array2HTMLAttrList
      *
@@ -72,7 +73,7 @@ namespace App\View\CapsuleHelper {
      * attribute list.
      *
      */
-    public static final function Array2HTMLAttrList ($array = []) {
+    public static function Array2HTMLAttrList ($array = []) {
       $array = is_array ($array) ? $array : [];
 
       if (!$array) return '';
@@ -103,7 +104,7 @@ namespace App\View\CapsuleHelper {
       return $attributeListStr;
     }
 
-    public static final function RenderChildrenList ($children = []) {
+    public static function RenderChildrenList ($children = []) {
       $children = !(is_array ($children) && $children) ? [] : (
         array_merge ($children, [])
       );
@@ -113,13 +114,16 @@ namespace App\View\CapsuleHelper {
 
       $defaultProps = self::childrenListDefaultProps ($options);
 
+      $childrenList = [];
+
       for ($i = 0; $i < $childrenCount; $i++) {
-        if (!isset($children [$i])) {
+        if (!isset ($children [$i])) {
           continue;
         }
 
-        $child = $children [ $i ];
+        $child = $children [$i];
 
+        $capsuleRenderContent = null;
         $childIsACapsuleElement = ( boolean )(
           is_object ($child) &&
           get_class ($child) === CapsuleElement::class
@@ -133,7 +137,7 @@ namespace App\View\CapsuleHelper {
 
           $childElement = $child ['_element'];
 
-          call_user_func_array (
+          $capsuleRenderContent = call_user_func_array (
             [$childElement, 'render'],
             array_merge (
               [
@@ -147,7 +151,7 @@ namespace App\View\CapsuleHelper {
             )
           );
         } elseif (self::isCapsule ($child)) {
-          call_user_func_array (
+          $capsuleRenderContent = call_user_func_array (
             [$child, 'render'],
             array_merge (
               [
@@ -158,16 +162,37 @@ namespace App\View\CapsuleHelper {
             )
           );
         } elseif (is_array ($child)) {
-          self::RenderChildrenList ($child);
+          $childrenList = array_merge (
+            $childrenList,
+            self::RenderChildrenList ($child)
+          );
         } elseif ($func = self::isFunction ($child)) {
-          $funcData = call_user_func_array ($func, [
-            $defaultProps, new CapsuleScopeContext
+          $renderContext = new CapsuleRenderContext ([
+            'component' => 'Fragment',
+            'props' => []
           ]);
 
-          self::RenderChildrenList ([$funcData]);
+          $funcData = call_user_func_array ($func, [
+            $defaultProps, new CapsuleScopeContext, [
+              'args' => [
+                '_renderContext' => $renderContext
+              ]
+            ]
+          ]);
+
+          $renderChildrenList = self::RenderChildrenList ([$funcData]);
+
+          if  ($renderContext->empty ()) {
+            $capsuleRenderContent = $renderChildrenList;
+          } else {
+            $capsuleRenderContent = array_merge (
+              [$renderContext->getChildren ()],
+              [$renderChildrenList]
+            );
+          }
         } elseif (self::isCapsuleYieldContext ($child)) {
-          self::RenderChildrenList (
-            $child->getContent(),
+          $capsuleRenderContent = self::RenderChildrenList (
+            $child->getContent (),
             [
               'defaultProps' => array_merge (
                 $defaultProps,
@@ -176,12 +201,16 @@ namespace App\View\CapsuleHelper {
             ]
           );
         } elseif (self::isPrintableCapsuleChild ($child)) {
-          self::printCapsuleChild ($child);
+          $capsuleRenderContent = self::printCapsuleChild ($child);
         }
+
+        array_push ($childrenList, $capsuleRenderContent);
       }
+
+      return $childrenList;
     }
 
-    public static final function Stringify ($data) {
+    public static function Stringify ($data) {
       if (in_array (gettype ($data), ['array', 'object'])){
         return json_encode (self::LeanData ($data));
       } else {
@@ -227,7 +256,7 @@ namespace App\View\CapsuleHelper {
       return $classRef;
     }
 
-    public static final function YieldContentGiven ($data) {
+    public static function YieldContentGiven ($data) {
       return ( boolean ) (
         is_array ($data) &&
         isset ($data ['args']) &&
@@ -239,13 +268,13 @@ namespace App\View\CapsuleHelper {
       );
     }
 
-    public static final function YieldContent ($data) {
+    public static function YieldContent ($data) {
       if (self::YieldContentGiven ($data)) {
         return $data ['args'][2]['children'];
       }
     }
 
-    public static final function IsFragmentReference ($data) {
+    public static function IsFragmentReference ($data) {
       return ( boolean ) (
         is_null ($data) ||
         (is_string ($data) && empty ($data)) ||
@@ -253,7 +282,7 @@ namespace App\View\CapsuleHelper {
       );
     }
 
-    public static final function LeanData ($data = null) {
+    public static function LeanData ($data = null) {
       if (self::IsLeanable ($data)) {
         return $data->lean ();
       } elseif (is_array ($data)) {
@@ -265,7 +294,7 @@ namespace App\View\CapsuleHelper {
       return $data;
     }
 
-    public static final function IsLeanable ($data) {
+    public static function IsLeanable ($data) {
       $SamibaseILeanable = join ('\\', [
         'Sammy', 'Packs', 'Sami', 'Base',
         'ILeanable'
@@ -314,7 +343,11 @@ namespace App\View\CapsuleHelper {
 
     private static function printCapsuleChild ($child) {
       $child = self::Stringify ($child);
-      return print (htmlentities ($child));
+      return [
+        'component' => 'Text',
+        'props' => [],
+        'content' => (htmlentities ($child))
+      ];
     }
 
     private static function isCapsuleReference ($data) {
@@ -326,7 +359,7 @@ namespace App\View\CapsuleHelper {
     }
 
     private static function isCapsule ($data) {
-      $baseClass = Base::class;
+      $baseClass = CapsuleBase::class;
 
       return ( boolean ) (
         is_object ($data) &&

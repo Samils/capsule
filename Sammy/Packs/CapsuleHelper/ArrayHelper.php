@@ -5,7 +5,7 @@
  *
  * @keywords Samils, ils, php framework
  * -----------------
- * @package Sammy\Packs\Samils\Capsule
+ * @package Sammy\Packs\CapsuleHelper
  * - Autoload, application dependencies
  *
  * MIT License
@@ -30,7 +30,8 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-namespace Sammy\Packs\Samils\Capsule {
+namespace Sammy\Packs\CapsuleHelper {
+  use App\View\CapsuleHelper\ArrayHelper\Base;
   /**
    * Make sure the module base internal class is not
    * declared in the php global scope defore creating
@@ -39,11 +40,11 @@ namespace Sammy\Packs\Samils\Capsule {
    * when trying to run the current command by the cli
    * API.
    */
-  if (!class_exists ('Sammy\Packs\Samils\Capsule\CapsuleAttributeParser')) {
+  if (!class_exists ('Sammy\Packs\CapsuleHelper\ArrayHelper')) {
   /**
-   * @class CapsuleAttributeParser
+   * @class ArrayHelper
    * Base internal class for the
-   * Samils\Capsule module.
+   * CapsuleHelper module.
    * -
    * This is (in the ils environment)
    * an instance of the php module,
@@ -56,7 +57,7 @@ namespace Sammy\Packs\Samils\Capsule {
    * and boot it by using the ils directory boot.
    * -
    */
-  class CapsuleAttributeParser {
-    use CapsuleAttributeParser\Base;
+  class ArrayHelper {
+    use Base;
   }}
 }

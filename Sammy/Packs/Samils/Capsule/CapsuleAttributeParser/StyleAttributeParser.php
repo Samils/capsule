@@ -39,7 +39,7 @@ namespace Sammy\Packs\Samils\Capsule\CapsuleAttributeParser {
    * when trying to run the current command by the cli
    * API.
    */
-  if (!class_exists('Sammy\Packs\Samils\Capsule\CapsuleAttributeParser\StyleAttributeParser')){
+  if (!class_exists ('Sammy\Packs\Samils\Capsule\CapsuleAttributeParser\StyleAttributeParser')) {
   /**
    * @class StyleAttributeParser
    * Base internal class for the
@@ -56,7 +56,10 @@ namespace Sammy\Packs\Samils\Capsule\CapsuleAttributeParser {
    * and boot it by using the ils directory boot.
    * -
    */
-  abstract class StyleAttributeParser {
+  class StyleAttributeParser {
+    /**
+     * @method string rewrite style property key
+     */
     protected static function rewriteStylePropKey ($key) {
       $re = '/[A-Z]/';
       $key = preg_replace_callback (
@@ -68,13 +71,11 @@ namespace Sammy\Packs\Samils\Capsule\CapsuleAttributeParser {
         (string)($key)
       );
 
-      return preg_replace ('/^(-*)/', '',
-        strtolower ($key)
-      );
+      return preg_replace ('/^(-*)/', '', strtolower ($key));
     }
+
     /**
      * @method string ParseStyleAttribute
-     *
      */
     public static function ParseStyleAttribute ($styles = null) {
       if (is_string ($styles)) {
@@ -88,9 +89,7 @@ namespace Sammy\Packs\Samils\Capsule\CapsuleAttributeParser {
           $prop = self::rewriteStylePropKey ($prop);
 
           if (!!is_string ($value)) {
-            $styleString .= join ('', [
-              $prop, ':', $value, ';'
-            ]);
+            $styleString .= join ('', [$prop, ':', $value, ';']);
           }
         }
 
