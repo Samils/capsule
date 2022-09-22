@@ -63,7 +63,7 @@ namespace Sammy\Packs\Samils\Capsule\CapsuleElement {
      *
      * @param array $capsuleElementDatas
      */
-    public final function __construct ($datas = null) {
+    public function __construct ($datas = null) {
       $this->datas = self::datasArrayKeys2LowerCase ($datas);
     }
 
@@ -79,11 +79,11 @@ namespace Sammy\Packs\Samils\Capsule\CapsuleElement {
       }
     }
 
-    public final function __get ($data = null) {
+    public function __get ($data = null) {
       return $this->getData ($data);
     }
 
-    public final function __call ($method, $arguments) {
+    public function __call ($method, $arguments) {
       $getterRe = '/^get(.+)/i';
 
       if (preg_match ($getterRe, $method, $getterMatch)) {

@@ -72,7 +72,7 @@ namespace Sammy\Packs\Samils\Capsule {
      *
      *
      */
-    public final function __construct ($datas = null) {
+    public function __construct ($datas = null) {
       $this->datas = $datas;
     }
 

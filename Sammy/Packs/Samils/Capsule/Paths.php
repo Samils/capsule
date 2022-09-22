@@ -112,7 +112,7 @@ namespace Sammy\Packs\Samils\Capsule {
       return self::StripPath ($path, __root__);
     }
 
-    public static final function FileAbsolutePath ($filePath) {
+    public static function FileAbsolutePath ($filePath) {
       $filePathSlices = preg_split ('/(\\\|\/)+/', $filePath);
       $filePathSlicesCount = count ($filePathSlices);
       $fileAbsolutePath = '';

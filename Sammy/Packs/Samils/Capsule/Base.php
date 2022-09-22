@@ -170,7 +170,7 @@ namespace Sammy\Packs\Samils\Capsule {
     * [Create description]
     * @param string|mixed $capsuleName
     */
-    public static final function Create ($capsuleName_ = '') {
+    public static function Create ($capsuleName_ = '') {
       $file = self::register (debug_backtrace());
 
       $capsuleName = !is_string ($capsuleName_) ? null : (

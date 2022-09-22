@@ -59,13 +59,13 @@ namespace Sammy\Packs\Samils\Capsule\CapsuleScopeContext {
   abstract class Base {
     private $scope = [];
 
-    public final function __construct ($initalProps = null) {
+    public function __construct ($initalProps = null) {
       if (is_array ($initalProps)) {
         $this->setDatas ($initalProps);
       }
     }
 
-    public final function __get (string $prop = null) {
+    public function __get (string $prop = null) {
       $prop = (string)($prop);
 
       if (isset ($this->scope [$prop])) {
@@ -97,13 +97,13 @@ namespace Sammy\Packs\Samils\Capsule\CapsuleScopeContext {
       }
     }
 
-    public final function __set (string $prop, $value = null) {
+    public function __set (string $prop, $value = null) {
       return call_user_func_array (
         [$this, 'setData'], [$prop, $value]
       );
     }
 
-    public final function __isset (string $prop) {
+    public function __isset (string $prop) {
       $prop = (string)($prop);
       return ( boolean )(isset ($this->scope [$prop]));
     }

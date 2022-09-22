@@ -63,7 +63,7 @@ namespace Sammy\Packs\Samils\Capsule {
     private $props = [];
     private $attributes = [];
 
-    public final function __construct (string $tagName = null) {
+    public function __construct (string $tagName = null) {
       $this->tagName = !$this->tagName ? $tagName : (
         (string) ($this->tagName)
       );
@@ -71,7 +71,7 @@ namespace Sammy\Packs\Samils\Capsule {
       $this->setTagName ($this->tagName);
     }
 
-    public final function __get (string $prop = null) {
+    public function __get (string $prop = null) {
       $propValue = $this->getAttribute ($prop);
 
       return $propValue ? $propValue : (
@@ -79,17 +79,17 @@ namespace Sammy\Packs\Samils\Capsule {
       );
     }
 
-    public final function getProp (string $prop = null) {
+    public function getProp (string $prop = null) {
       if (is_string ($prop) && isset ($this->props [$prop])) {
         return $this->props [$prop];
       }
     }
 
-    public final function setProp (string $prop, $propValue) {
+    public function setProp (string $prop, $propValue) {
       $this->props [$prop] = $propValue;
     }
 
-    public final function setProps (array $props = []) {
+    public function setProps (array $props = []) {
       /**
        * Map the props array and insert each
        * prop-value pair as a prop for the current
@@ -100,27 +100,27 @@ namespace Sammy\Packs\Samils\Capsule {
       }
     }
 
-    public final function setProperty () {
+    public function setProperty () {
       return call_user_func_array (
         [$this, 'setProp'], func_get_args ()
       );
     }
 
-    public final function getProperty () {
+    public function getProperty () {
       return call_user_func_array (
         [$this, 'getProp'], func_get_args ()
       );
     }
 
-    public final function getProps () {
+    public function getProps () {
       return array_merge ([], $this->props);
     }
 
-    public final function setAttribute ($attrName, $attrValue) {
+    public function setAttribute ($attrName, $attrValue) {
       $this->attributes [$attrName] = $attrValue;
     }
 
-    public final function setAttributes (array $attributes = []) {
+    public function setAttributes (array $attributes = []) {
       /**
        * Map the attributes array and insert each
        * prop-value pair as an attribute for the current
@@ -131,13 +131,13 @@ namespace Sammy\Packs\Samils\Capsule {
       }
     }
 
-    public final function getAttribute ($attrName) {
+    public function getAttribute ($attrName) {
       if (isset ($this->attributes [$attrName])) {
         return $this->attributes [$attrName];
       }
     }
 
-    public final function getAttributes () {
+    public function getAttributes () {
       return array_merge ([], $this->attributes);
     }
 
@@ -159,7 +159,7 @@ namespace Sammy\Packs\Samils\Capsule {
       return in_array ($this->tagName, $selfClosedTags);
     }
 
-    protected final function getRenderDatas ($capsule, $capsuleArgs = []) {
+    protected function getRenderDatas ($capsule, $capsuleArgs = []) {
       $capsuleArgsSent = (boolean)(is_array ($capsuleArgs));
 
       $capsuleArguments = $capsuleArgsSent ? $capsuleArgs : [];

@@ -41,7 +41,7 @@ namespace Sammy\Packs\Samils\Capsule\Config {
      * [Config description]
      * @param array $configDatas
      */
-    public static final function Config ($configDatas = []) {
+    public static function Config ($configDatas = []) {
       $configDatas = !is_array($configDatas) ? [] : (
         $configDatas
       );
@@ -51,7 +51,7 @@ namespace Sammy\Packs\Samils\Capsule\Config {
       );
     }
 
-    private static final function viewsDir () {
+    private static function viewsDir () {
       $viewsDirDefined = ( boolean ) (
         isset (self::$config ['viewsDir']) &&
         is_string (self::$config ['viewsDir']) &&

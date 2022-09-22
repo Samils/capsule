@@ -46,7 +46,7 @@ namespace Sammy\Packs\Capsule {
      * @param  array $datas
      * - View [Engine] Datas
 		 */
-		public static final function RenderDOM ($view = '', $datas = []) {
+		public static function RenderDOM ($view = '', $datas = []) {
 			if (!(is_string ($view) && is_file ($view))) {
 				return;
       }
