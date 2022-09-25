@@ -250,7 +250,7 @@ namespace App\View\CapsuleHelper\CapsuleHelper {
 
       # App\View\HTMLAnchorElement
       $classRef = join ('\\', [
-        '\App', 'View', join ('', ['HTML', $ref, 'Element'])
+        '\App', 'View', join ('', ['HTML', ucfirst ($ref), 'Element'])
       ]);
 
       return $classRef;
