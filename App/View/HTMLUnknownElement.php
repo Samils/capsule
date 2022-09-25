@@ -40,7 +40,7 @@ namespace App\View {
    * when trying to run the current command by the cli
    * API.
    */
-  if (!class_exists('App\View\HTMLUnknownElement')){
+  if (!class_exists ('App\View\HTMLUnknownElement')) {
   /**
    * @class Base
    * Base internal class for the
