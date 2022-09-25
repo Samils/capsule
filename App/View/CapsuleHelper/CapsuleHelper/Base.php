@@ -243,9 +243,9 @@ namespace App\View\CapsuleHelper\CapsuleHelper {
       if (isset ($particularCases [$ref])) {
         $ref = $particularCases [$ref];
       } elseif (preg_match ($headingRe, $ref)) {
-        $ref = 'heading';
+        $ref = 'Ueading';
       } else {
-        $ref = 'unknown';
+        $ref = 'Unknown';
       }
 
       # App\View\HTMLAnchorElement
