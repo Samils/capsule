@@ -49,7 +49,7 @@ namespace App\View {
 
     $imageRestArguments = ArrayHelper::PropsBeyond (['children']);
 
-    $relativePathRe = '/^\.\//';
+    $relativePathRe = '/^\.+\//';
 
     $src = preg_replace ('/^\/+/', '', $src);
 
