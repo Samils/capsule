@@ -58,5 +58,18 @@ namespace App\View\CapsuleHelper {
    */
   class CapsuleHelper {
     use CapsuleHelper\Base;
+    use CapsuleHelper\FilePathHelper;
+
+
+    public static function generateComponentSelectorRef ($componentName) {
+      return join ('', [
+        $componentName,
+        rand (0, 99999),
+        rand (111, 9999) * rand (222, 99999),
+        (int)time () * rand (111, 99999),
+        time (),
+        'r'
+      ]);
+    }
   }}
 }
