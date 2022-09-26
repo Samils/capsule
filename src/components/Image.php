@@ -48,7 +48,7 @@ namespace App\View {
       $imageRestArguments ['alt'] = $src;
     }
 
-    $relativePathRe = '/^\.\//';
+    $relativePathRe = '/^\.+\//';
 
     $src = preg_replace ('/^\/+/', '', $src);
 
