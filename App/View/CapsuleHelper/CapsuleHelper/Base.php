@@ -32,6 +32,7 @@
  */
 namespace App\View\CapsuleHelper\CapsuleHelper {
   use Closure;
+  use Capsule\Text;
   use Sammy\Packs\Samils\Capsule;
   use Sammy\Packs\Samils\Capsule\CapsuleElement;
   use Sammy\Packs\Samils\Capsule\NativeHTMLCapsule;
@@ -161,6 +162,12 @@ namespace App\View\CapsuleHelper\CapsuleHelper {
               []
             )
           );
+        } elseif ($child instanceof Text) {
+          $capsuleRenderContent = [
+            'component' => 'Text',
+            'props' => [],
+            'content' => $child->getContent ()
+          ];
         } elseif (is_array ($child)) {
           $childrenList = array_merge (
             $childrenList,
