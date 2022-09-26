@@ -48,15 +48,47 @@ namespace App\View {
       $imageRestArguments ['alt'] = $src;
     }
 
+    $relativePathRe = '/^\.\//';
+
     $src = preg_replace ('/^\/+/', '', $src);
 
-    $img = requires ("~/app/assets/images/{$src}");
+    if (preg_match ($relativePathRe, $src)) {
+      $refFilePath = CapsuleHelper::traceComponentFilePath (debug_backtrace ());
+
+      $imagePath = preg_replace ($relativePathRe, '', $src);
+
+      $imagePath = join (DIRECTORY_SEPARATOR, [dirname ($refFilePath), $imagePath]);
+
+      $imagePath = join (DIRECTORY_SEPARATOR, [
+        (Capsule::ViewsPath ()),
+        Capsule::StripViewsPath ($imagePath)
+      ]);
+
+      if (is_file ($imagePath)) {
+        $img = requires ($imagePath);
+      }
+
+    } else {
+      $path = requires ('path');
+
+      $imagePath = $path->join ('~', 'app', 'assets', 'images', $src);
+
+      if (is_file ($imagePath)) {
+        $img = requires ($imagePath);
+      }
+    }
+
+    $isValidImageElement = (boolean)(
+      isset ($img)
+      && is_object ($img)
+      && $img instanceof HTMLImageElement
+    );
 
     $src = (defined('Configure::ApplicationAssetsPath') ? Conf::ApplicationAssetsPath : '') . '/images/' . $src;
 
     Capsule::PartialRender ('img',
       array_merge ($imageRestArguments, [
-        'src' => is_object ($img) && $img instanceof HTMLImageElement ? $img : $src,
+        'src' => $isValidImageElement ? $img : $src,
         'crossorigin' => 'annonimous'
       ])
     );
