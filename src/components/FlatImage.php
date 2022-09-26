@@ -56,9 +56,7 @@ namespace App\View {
     if (preg_match ($relativePathRe, $src)) {
       $refFilePath = CapsuleHelper::traceComponentFilePath (debug_backtrace ());
 
-      $imagePath = preg_replace ($relativePathRe, '', $src);
-
-      $imagePath = join (DIRECTORY_SEPARATOR, [dirname ($refFilePath), $imagePath]);
+      $imagePath = join (DIRECTORY_SEPARATOR, [dirname ($refFilePath), $src]);
 
       $imagePath = join (DIRECTORY_SEPARATOR, [
         (Capsule::ViewsPath ()),
