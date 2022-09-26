@@ -31,6 +31,8 @@
  * SOFTWARE.
  */
 namespace App\View {
+  use Capsule\Text;
+
   use Configure as Conf;
   use Sammy\Packs\Samils\Capsule\CapsuleScopeContext;
 
@@ -55,7 +57,7 @@ namespace App\View {
           return trim ($match [1]);
         }, $styleFileContent);
 
-        return Capsule::PartialRender ('style', ['type' => 'text/css', 'crossorigin' => 'annonimous'], $styleFileContent);
+        return Capsule::PartialRender ('style', ['type' => 'text/css', 'crossorigin' => 'annonimous'], new Text ($styleFileContent));
       }
 
     }
