@@ -168,7 +168,7 @@ namespace Sammy\Packs\Samils\Capsule\CapsuleCoreDOM {
       if (isset ($virtualDomContent ['content']) && is_string ($virtualDomContent ['content'])) {
         $virtualDomContent ['children'] = [$virtualDomContent ['content']];
       } elseif (!isset ($virtualDomContent ['children'])) {
-        $virtualDomContent ['children'] = null;
+        $virtualDomContent ['children'] = [];
       }
 
       self::renderPreContent ($virtualDomContent);
