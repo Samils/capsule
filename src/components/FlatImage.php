@@ -96,13 +96,13 @@ namespace App\View {
     }
 
     Capsule::PartialRender (null, [],
-      Capsule::PartialRender ('head',
-        Capsule::PartialRender ('style', ['type' => 'text/css'],
+      Capsule::CreateElement ('head',
+        Capsule::CreateElement ('style', ['type' => 'text/css'],
           new Text ('.'.$selector.'{background-image: url('.$imageSrc.')}')
         )
       ),
 
-      Capsule::PartialRender ('div', array_merge ($imageRestArguments, ['class' => $selector]),
+      Capsule::CreateElement ('div', array_merge ($imageRestArguments, ['class' => $selector]),
         Capsule::Yield ([])
       )
     );
