@@ -78,7 +78,7 @@ namespace Sammy\Packs\Samils\Capsule\CapsuleVirtualDOM {
 
               'children' => [
                 [
-                  'element' => 'Text',
+                  'component' => 'Text',
                   'props' => [],
 
                   'content' => ""
