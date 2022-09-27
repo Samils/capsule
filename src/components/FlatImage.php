@@ -47,7 +47,7 @@ namespace App\View {
       }
     }
 
-    $imageRestArguments = ArrayHelper::PropsBeyond (['children']);
+    $imageRestArguments = ArrayHelper::PropsBeyond (['children'], $imageRestArguments);
 
     $relativePathRe = '/^\.+\//';
 
@@ -90,7 +90,9 @@ namespace App\View {
     $selector = CapsuleHelper::generateComponentSelectorRef ('FlatImage');
 
     if (isset ($imageRestArguments ['class']) && is_string ($imageRestArguments ['class'])) {
-      $selector = join (' ', [$selector, $imageRestArguments ['class']]);
+      $className = join (' ', [$selector, $imageRestArguments ['class']]);
+    } else {
+      $className = $selector;
     }
 
     Capsule::PartialRender (null, [],
@@ -100,7 +102,7 @@ namespace App\View {
         )
       ),
 
-      Capsule::CreateElement ('div', array_merge ($imageRestArguments, ['class' => $selector]),
+      Capsule::CreateElement ('div', array_merge ($imageRestArguments, ['class' => $className]),
         Capsule::Yield ([])
       )
     );
