@@ -68,6 +68,7 @@ namespace App\View {
       }
 
     } else {
+
       $path = requires ('path');
 
       $imagePath = $path->join ('~', 'app', 'assets', 'images', $src);
