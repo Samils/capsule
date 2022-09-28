@@ -32,6 +32,7 @@
  */
 namespace App\View {
   use Configure as Conf;
+  use App\View\CapsuleHelper\ArrayHelper;
   use Sammy\Packs\Samils\Capsule\CapsuleScopeContext;
 
   Capsule::Def ('Image', function ($args) {
@@ -47,6 +48,8 @@ namespace App\View {
     if (!isset ($imageRestArguments ['alt'])) {
       $imageRestArguments ['alt'] = $src;
     }
+
+    $imageRestArguments = ArrayHelper::PropsBeyond (['children'], $imageRestArguments);
 
     $relativePathRe = '/^\.+\//';
 
