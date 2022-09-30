@@ -99,7 +99,9 @@ namespace Sammy\Packs\Samils\Capsule\CapsuleScopeContext {
       }
 
       if (is_object ($capsuleGlobalContext) && get_class ($capsuleGlobalContext) !== static::class) {
-        return isset ($capsuleGlobalContext->$prop) ? $capsuleGlobalContext->$prop : null;
+        if (isset ($capsuleGlobalContext->$prop)) {
+          return $capsuleGlobalContext->$prop;
+        }
       }
 
     }
