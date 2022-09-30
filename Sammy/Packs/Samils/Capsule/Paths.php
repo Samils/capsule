@@ -108,6 +108,17 @@ namespace Sammy\Packs\Samils\Capsule {
       return self::StripPath ($path, self::ViewsPath (), 1);
     }
 
+    public static function PathIsInViewsDir ($path) {
+      $viewsPath = self::ViewsPath ();
+      $path = self::StripPath ($path, $viewsPath);
+
+      $pathFromViewsDir = join (DIRECTORY_SEPARATOR, [
+        $viewsPath, $path
+      ]);
+
+      return file_exists ($pathFromViewsDir);
+    }
+
     public static function StripRootPath ($path) {
       return self::StripPath ($path, __root__);
     }
