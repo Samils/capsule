@@ -90,15 +90,21 @@ namespace Sammy\Packs\Samils\Capsule {
     private $body;
     public $fileName;
 
+    private static $globalContext;
+
     public function __construct ($name, $body) {
       $req = new Request;
       self::setCapsuleProps ($this->fileName);
 
+      if (!self::$globalContext) {
+        self::$globalContext = $req->controller;
+      }
+
       $this->capsuleName = $name;
       $this->body = Closure::bind (
         $body,
-        $req->controller,
-        get_class ($req->controller)
+        self::$globalContext,
+        get_class (self::$globalContext)
       );
     }
 
@@ -414,6 +420,10 @@ namespace Sammy\Packs\Samils\Capsule {
 
     public function _getCapsuleProps () {
       return self::$files [$this->fileName]['props'];
+    }
+
+    public static function getGlobalContext () {
+      return self::$globalContext;
     }
 
   }}

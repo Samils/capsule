@@ -58,6 +58,7 @@ namespace App\View\CapsuleHelper {
    */
   class CapsuleHelper {
     use CapsuleHelper\Base;
+    use CapsuleHelper\HTMLHelper;
     use CapsuleHelper\FilePathHelper;
 
 

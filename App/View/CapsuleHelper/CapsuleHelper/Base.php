@@ -33,14 +33,14 @@
 namespace App\View\CapsuleHelper\CapsuleHelper {
   use Closure;
   use Capsule\Text;
-  use Sammy\Packs\Samils\Capsule;
+  use App\View\Capsule;
   use Sammy\Packs\Samils\Capsule\CapsuleElement;
   use Sammy\Packs\Samils\Capsule\NativeHTMLCapsule;
   use Sammy\Packs\Samils\Capsule\Base as CapsuleBase;
   use Sammy\Packs\Samils\Capsule\CapsuleScopeContext;
   use Sammy\Packs\Samils\Capsule\CapsuleYieldContext;
   use Sammy\Packs\Samils\Capsule\CapsuleRenderContext;
-  use Sammy\Packs\Samils\Capsule\CapsuleAttributeParser;
+
   /**
    * Make sure the module base internal trait is not
    * declared in the php global Base defore creating
@@ -68,43 +68,8 @@ namespace App\View\CapsuleHelper\CapsuleHelper {
    */
   trait Base {
     /**
-     * @method string Array2HTMLAttrList
-     *
-     * Convert a given array to an html
-     * attribute list.
-     *
+     * @method array Render a given children list as array
      */
-    public static function Array2HTMLAttrList ($array = []) {
-      $array = is_array ($array) ? $array : [];
-
-      if (!$array) return '';
-
-      $attributeListStr = '';
-
-      $attributeParser = new CapsuleAttributeParser;
-
-      foreach ($array as $attribute => $value) {
-        list ($attributeName, $attributeValue) = ( array )(
-          $attributeParser->parseAttribute (
-            $attribute, $value
-          )
-        );
-
-        $attributeValue = self::evaluateHTMLAttr (
-          $attributeValue,
-          $attributeName
-        );
-
-        if ( $attributeValue ) {
-          $attributeValue = "={$attributeValue}";
-        }
-
-        $attributeListStr .= " {$attributeName}{$attributeValue}";
-      }
-
-      return $attributeListStr;
-    }
-
     public static function RenderChildrenList ($children = []) {
       $children = !(is_array ($children) && $children) ? [] : (
         array_merge ($children, [])
@@ -229,40 +194,6 @@ namespace App\View\CapsuleHelper\CapsuleHelper {
       }
     }
 
-    public static function GetNativeHTMLCapsuleClass ($ref) {
-      $ref = strtolower ($ref);
-
-      $headingRe = '/^h([1-6])$/';
-      $particularCases = [
-        'a' => 'anchor',
-        'dl' => 'dlist',
-        'dd' => '',
-        'img' => 'image',
-        'ol' => 'olist',
-        'ul' => 'ulist',
-        'tr' => 'tableRow',
-        'td' => 'tableCell',
-        'th' => 'tableCell',
-        'thead' => 'tableSection',
-        'tbody' => 'tableSection'
-      ];
-
-      if (isset ($particularCases [$ref])) {
-        $ref = $particularCases [$ref];
-      } elseif (preg_match ($headingRe, $ref)) {
-        $ref = 'Heading';
-      } else {
-        $ref = 'Unknown';
-      }
-
-      # App\View\HTMLAnchorElement
-      $classRef = join ('\\', [
-        '\App', 'View', join ('', ['HTML', ucfirst ($ref), 'Element'])
-      ]);
-
-      return $classRef;
-    }
-
     public static function YieldContentGiven ($data) {
       return ( boolean ) (
         is_array ($data) &&
@@ -331,10 +262,16 @@ namespace App\View\CapsuleHelper\CapsuleHelper {
         get_class ($data) === Closure::class
       );
 
+      $globalContext = Capsule::getGlobalContext ();
+
+      if (!$globalContext) {
+        $globalContext = new CapsuleScopeContext;
+      }
+
       if ($dataIsClosureObject) {
         return Closure::bind (
           $data,
-          new CapsuleScopeContext,
+          $globalContext,
           CapsuleScopeContext::class
         );
       }
@@ -377,15 +314,6 @@ namespace App\View\CapsuleHelper\CapsuleHelper {
       );
     }
 
-    private static function isNativeHTMLElement ($data) {
-      $nativeHTMLCapsuleClass = NativeHTMLCapsule::class;
-
-      return ( boolean ) (
-        is_object ($data) &&
-        $data instanceof $nativeHTMLCapsuleClass
-      );
-    }
-
     private static function isCapsuleYieldContext ($data) {
       $capsuleYieldContextClass = CapsuleYieldContext::class;
 
@@ -393,18 +321,6 @@ namespace App\View\CapsuleHelper\CapsuleHelper {
         is_object ($data) &&
         $data instanceof $capsuleYieldContextClass
       );
-    }
-
-    private static function evaluateHTMLAttr ($value = null) {
-      $valueType = strtolower (gettype($value));
-
-      if (in_array ($valueType, ['array', 'object'])) {
-        $decodedvalue = self::jsonObjectEncode ($value);
-
-        return "'{$decodedvalue}'";
-      }
-
-      return "\"{$value}\"";
     }
 
     private static function jsonObjectEncode ($data) {
