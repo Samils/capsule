@@ -56,6 +56,7 @@ namespace Sammy\Packs\Samils\Capsule {
    * and boot it by using the ils directory boot.
    * -
    */
-  class CapsuleScopeContext extends CapsuleScopeContext\Base {
+  class CapsuleScopeContext {
+    use CapsuleScopeContext\Base;
   }}
 }

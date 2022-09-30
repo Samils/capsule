@@ -31,18 +31,19 @@
  * SOFTWARE.
  */
 namespace Sammy\Packs\Samils\Capsule\CapsuleScopeContext {
+  use App\View\Capsule;
   /**
-   * Make sure the module base internal class is not
+   * Make sure the module base internal trait is not
    * declared in the php global scope defore creating
    * it.
    * It ensures that the script flux is not interrupted
    * when trying to run the current command by the cli
    * API.
    */
-  if (!class_exists('Sammy\Packs\Samils\Capsule\CapsuleScopeContext\Base')){
+  if (!trait_exists ('Sammy\Packs\Samils\Capsule\CapsuleScopeContext\Base')) {
   /**
    * @class Base
-   * Base internal class for the
+   * Base internal trait for the
    * Capsule module.
    * -
    * This is (in the ils environment)
@@ -56,7 +57,7 @@ namespace Sammy\Packs\Samils\Capsule\CapsuleScopeContext {
    * and boot it by using the ils directory boot.
    * -
    */
-  abstract class Base {
+  trait Base {
     private $scope = [];
 
     public function __construct ($initalProps = null) {
@@ -75,6 +76,7 @@ namespace Sammy\Packs\Samils\Capsule\CapsuleScopeContext {
       $className = self::class;
       $backTrace = debug_backtrace ();
       $backTraceCount = count ($backTrace);
+      $capsuleGlobalContext = Capsule::getGlobalContext ();
 
       for ($i = 0; $i < $backTraceCount; $i++) {
         $currentTrace = $backTrace [ $i ];
@@ -95,6 +97,11 @@ namespace Sammy\Packs\Samils\Capsule\CapsuleScopeContext {
           return $alternateScope->$prop;
         }
       }
+
+      if (is_object ($capsuleGlobalContext) && get_class ($capsuleGlobalContext) !== static::class) {
+        return isset ($capsuleGlobalContext->$prop) ? $capsuleGlobalContext->$prop : null;
+      }
+
     }
 
     public function __set (string $prop, $value = null) {
