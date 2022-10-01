@@ -31,6 +31,7 @@
  * SOFTWARE.
  */
 namespace Sammy\Packs\Samils\Capsule {
+  use Clinter\Console;
   use App\View\Capsule;
   use Sammy\Packs\XSami;
   /**
@@ -107,11 +108,31 @@ namespace Sammy\Packs\Samils\Capsule {
         if (!is_file ($componentFilePath) && is_file ($cacheFilePath)) {
           @unlink ($cacheFilePath);
 
-          print ("\nDeleted: {$cacheFilePath}\n");
+          Console::error ("\nDeleted: {$cacheFilePath}\n");
+
+          $cacheFileDirPath = dirname ($cacheFilePath);
 
           unset (self::$cacheFiles [$cacheFilePath]);
         }
       }
+    }
+
+    protected static function readDir ($dir) {
+      $files = [];
+
+      if (is_dir ($dir)) {
+        if ($dh = opendir ($dir)) {
+          while (($file = readdir ($dh)) !== false) {
+            if (!in_array ($file, ['.', '..'])) {
+              array_push ($files, realpath ($dir . '/' . $file));
+            }
+          }
+
+          closedir ($dh);
+        }
+      }
+
+      return $files;
     }
   }}
 }
