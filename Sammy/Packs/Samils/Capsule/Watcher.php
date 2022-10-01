@@ -94,7 +94,7 @@ namespace Sammy\Packs\Samils\Capsule {
 
       $phpCacheFileExtension = pathinfo ($cacheFilePathFromViewsDir, PATHINFO_EXTENSION);
 
-      if (!in_array ($phpCacheFileExtension, ['css'])) {
+      if (empty (trim ($phpCacheFileExtension))) {
         array_push ($filePathFromViewsDirArr, 'cap');
       }
 
