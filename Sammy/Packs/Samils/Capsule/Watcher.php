@@ -110,8 +110,6 @@ namespace Sammy\Packs\Samils\Capsule {
 
           Console::error ("\nDeleted: {$cacheFilePath}\n");
 
-          $cacheFileDirPath = dirname ($cacheFilePath);
-
           unset (self::$cacheFiles [$cacheFilePath]);
         }
       }
