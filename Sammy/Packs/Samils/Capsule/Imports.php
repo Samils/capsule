@@ -207,6 +207,8 @@ namespace Sammy\Packs\Samils\Capsule {
           self::$files[$capsuleFile]['scope'][$as] = (
             $capsuleExports[$capsule]
           );
+        } else {
+          self::$files[$capsuleFile]['scope'][$as] = $capsuleCore;
         }
 
       } else {
