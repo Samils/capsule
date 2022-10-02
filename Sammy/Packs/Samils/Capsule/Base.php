@@ -65,6 +65,7 @@ namespace Sammy\Packs\Samils\Capsule {
     use Imports;
     use Exports;
     use Config\Base;
+    use Component\Helper;
     use CapsuleRenderContext\Component\Helper;
 
     #private $capsuleRenderingTree = [];
@@ -172,7 +173,7 @@ namespace Sammy\Packs\Samils\Capsule {
     * @param string|mixed $capsuleName
     */
     public static function Create ($capsuleName_ = '') {
-      $file = self::register (debug_backtrace());
+      $file = self::register (debug_backtrace ());
 
       $capsuleName = !is_string ($capsuleName_) ? null : (
         $capsuleName_
