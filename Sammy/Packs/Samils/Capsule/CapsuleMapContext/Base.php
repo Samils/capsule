@@ -32,17 +32,17 @@
  */
 namespace Sammy\Packs\Samils\Capsule\CapsuleMapContext {
   /**
-   * Make sure the module base internal class is not
+   * Make sure the module base internal trait is not
    * declared in the php global scope defore creating
    * it.
    * It ensures that the script flux is not interrupted
    * when trying to run the current command by the cli
    * API.
    */
-  if (!class_exists('Sammy\Packs\Samils\Capsule\CapsuleMapContext\Base')){
+  if (!trait_exists ('Sammy\Packs\Samils\Capsule\CapsuleMapContext\Base')) {
   /**
-   * @class Base
-   * Base internal class for the
+   * @trait Base
+   * Base internal trait for the
    * Capsule module.
    * -
    * This is (in the ils environment)
@@ -56,6 +56,6 @@ namespace Sammy\Packs\Samils\Capsule\CapsuleMapContext {
    * and boot it by using the ils directory boot.
    * -
    */
-  abstract class Base {
+  trait Base {
   }}
 }
