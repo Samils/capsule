@@ -66,7 +66,8 @@ namespace Sammy\Packs\Samils\Capsule {
 
       if (!isset(self::$files[$file]['scope'][$capsule])) {
 
-        $capsuleBody = array_last_i (func_get_args());
+        $args = func_get_args ();
+        $capsuleBody = $args [-1 + count ($args)];
 
         if ( $capsuleBody instanceof \Closure ) {
           $capsuleCore = new static ($capsule, $capsuleBody);

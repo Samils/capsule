@@ -183,7 +183,8 @@ namespace Sammy\Packs\Samils\Capsule {
         $capsuleName_
       );
 
-      $capsuleBody = array_last_i (func_get_args());
+      $args = func_get_args ();
+      $capsuleBody = $args [-1 + count ($args)];
 
       $capsuleCore = new static ($capsuleName, $capsuleBody);
 
@@ -237,9 +238,8 @@ namespace Sammy\Packs\Samils\Capsule {
 
       $class = self::class;
       $capsuleCore = null;
-      $capsuleBody = array_last_i (
-        func_get_args ()
-      );
+      $args = func_get_args ();
+      $capsuleBody = $args [-1 + count ($args)];
 
       if ($capsuleBody instanceof \Closure) {
         $capsuleCore = new static (
