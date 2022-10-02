@@ -32,7 +32,6 @@
  */
 namespace Sammy\Packs\Samils\Capsule {
   use Closure;
-  use Sammy\Packs\HTTP\Request;
   use App\View\Capsule;
   use App\View\CapsuleHelper\CapsuleHelper;
   /**
@@ -93,14 +92,14 @@ namespace Sammy\Packs\Samils\Capsule {
     private static $globalContext;
 
     public function __construct ($name, $body) {
-      $req = new Request;
       self::setCapsuleProps ($this->fileName);
 
       if (!self::$globalContext) {
-        self::$globalContext = $req->controller;
+        self::$globalContext = new CapsuleGlobalContext ();
       }
 
       $this->capsuleName = $name;
+
       $this->body = Closure::bind (
         $body,
         self::$globalContext,
@@ -130,10 +129,6 @@ namespace Sammy\Packs\Samils\Capsule {
       );
 
       $capsuleInitialProps = $this->_getCapsuleProps ();
-
-      #echo $this->fileName, "<br /><pre>";
-      #print_r($capsuleInitialProps);
-      #echo '</pre><br /><br /><br /><br /><br />';
 
       $capsuleScopeContext = new CapsuleScopeContext (
         $capsuleInitialProps
