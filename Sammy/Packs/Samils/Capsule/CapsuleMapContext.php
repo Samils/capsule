@@ -39,7 +39,7 @@ namespace Sammy\Packs\Samils\Capsule {
    * when trying to run the current command by the cli
    * API.
    */
-  if (!class_exists('Sammy\Packs\Samils\Capsule\CapsuleMapContext')){
+  if (!class_exists ('Sammy\Packs\Samils\Capsule\CapsuleMapContext')) {
   /**
    * @class CapsuleMapContext
    * Base internal class for the
@@ -56,6 +56,7 @@ namespace Sammy\Packs\Samils\Capsule {
    * and boot it by using the ils directory boot.
    * -
    */
-  final class CapsuleMapContext extends CapsuleMapContext\Base {
+  final class CapsuleMapContext {
+    use CapsuleMapContext\Base;
   }}
 }
