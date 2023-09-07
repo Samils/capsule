@@ -130,7 +130,9 @@ namespace Sammy\Packs\Capsule {
 
         $bufferData = ob_get_clean ();
 
-        Debugger::log (trim (preg_replace ("/\n+/", "\n", $bufferData)));
+        if (class_exists (Debugger::class)) {
+          Debugger::log (trim (preg_replace ("/\n+/", "\n", $bufferData)));
+        }
 
         ## $res = new \Sammy\Packs\HTTP\Response;
         ## $data = $mainComponentDataObject;

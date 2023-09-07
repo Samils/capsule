@@ -57,6 +57,6 @@ namespace Sammy\Packs {
    * -
    */
   class Capsule {
-    use Base;
+    use Capsule\Base;
   }}
 }
