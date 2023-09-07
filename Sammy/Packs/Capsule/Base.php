@@ -41,19 +41,19 @@ namespace Sammy\Packs\Capsule {
      * [RenderDOM description]
      * @param string $view
      * - Absolute path for the current view
-     * @param  array $datas
+     * @param  array $options
      * - View [Engine] Datas
      */
-    public static function RenderDOM ($view = '', $datas = []) {
+    public static function RenderDOM ($view = '', $options = []) {
       if (!(is_string ($view) && is_file ($view))) {
         return;
       }
 
       ob_start ();
 
-      $datas = !is_array ($datas) ? [] : $datas;
-      $responseData = !isset ($datas ['responseData']) ? [] : [
-        'data' => $datas [ 'responseData' ]
+      $options = !is_array ($options) ? [] : $options;
+      $responseData = !isset ($options ['responseData']) ? [] : [
+        'data' => $options [ 'responseData' ]
       ];
 
       $viewInitialProps = ArrayHelper::PropsBeyond (
@@ -63,21 +63,19 @@ namespace Sammy\Packs\Capsule {
           'viewsDir',
           'action'
         ],
-        $datas
+        $options
       );
 
-      $templateRelativePath = $datas ['templateRelativePath'];
+      $templateRelativePath = $options ['templateRelativePath'];
 
       $responseData = array_merge (
         $viewInitialProps,
         $responseData
       );
 
-      $viewsDir = !isset ($datas ['viewsDir']) ? __views__ : (
-        $datas ['viewsDir']
+      $viewsDir = !isset ($options ['viewsDir']) ? __views__ : (
+        $options ['viewsDir']
       );
-
-      $layoutsDir = (string)($viewsDir . '/layouts/');
 
       # ob_flush ();
 
@@ -85,22 +83,34 @@ namespace Sammy\Packs\Capsule {
         header ('content-type: text/html');
       }
 
-      $layoutName = self::getTemplateLayoutName (dirname ($templateRelativePath), $layoutsDir);
-      $viewCore = \php\requires ($view);
-
-      if (!$layoutName && isset ($datas ['layout']) && is_string ($datas ['layout']) && !empty ($datas ['layout'])) {
-        $layoutName = $layoutsDir . str ($datas ['layout']) . '.cache.php';
+      if (isset ($options ['layoutPath'])
+        && is_string ($options ['layoutPath'])
+        && is_file ($options ['layoutPath'])) {
+        $layoutPath = $options ['layoutPath'];
       }
 
-      # $layoutName = !isset ($datas ['layout']) ? 'application' : (
-      #   str ($datas ['layout'])
-      # );
+      if (!isset ($layoutPath)) {
+        $layoutsDir = (string)($viewsDir . '/layouts/');
 
-      $layoutCore = requires ($layoutName);
+        $layoutPath = self::getTemplateLayoutName (dirname ($templateRelativePath), $layoutsDir);
+        $viewCore = \php\requires ($view);
 
-      #exit ($viewsDir.'/layouts/'.$layoutName.'.cache.php');
+        if (!$layoutPath && isset ($options ['layout']) && is_string ($options ['layout']) && !empty ($options ['layout'])) {
+          $layoutPath = $layoutsDir . str ($options ['layout']) . '.cache.php';
+        }
 
-      Capsule::Config ($datas);
+        # end layout resolve
+
+        # $layoutPath = !isset ($options ['layout']) ? 'application' : (
+        #   str ($options ['layout'])
+        # );
+      }
+
+      $layoutCore = requires ($layoutPath);
+
+      #exit ($viewsDir.'/layouts/'.$layoutPath.'.cache.php');
+
+      Capsule::Config ($options);
 
       if ($layoutCore instanceof Capsule) {
         # Get the Rendering Map of the current component
@@ -133,7 +143,7 @@ namespace Sammy\Packs\Capsule {
 
         CapsuleCoreDOM::Render ($virtualDom);
       } else {
-        exit ('Error => No Layout for ' . $layoutName);
+        exit ('Error => No Layout for ' . $layoutPath);
       }
 
       exit (0);
