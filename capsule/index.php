@@ -9,5 +9,8 @@
  * - Autoload, application dependencies
  */
 namespace Sammy\Packs\Capsule {
-	$module->exports = new Base;
+  use Sammy\Packs\Capsule;
+
+
+	$module->exports = new Capsule;
 }
