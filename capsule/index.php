@@ -68,6 +68,8 @@ namespace Sammy\Packs\Capsule {
         $datas
       );
 
+      $templateRelativePath = $datas ['templateRelativePath'];
+
       $responseData = array_merge (
         $viewInitialProps,
         $responseData
@@ -77,21 +79,26 @@ namespace Sammy\Packs\Capsule {
         $datas ['viewsDir']
       );
 
+      $layoutsDir = (string)($viewsDir . '/layouts/');
+
       # ob_flush ();
 
 			if (!(ob_get_length () >= 1)) {
         header ('content-type: text/html');
       }
 
+      $layoutName = self::getTemplateLayoutName (dirname ($templateRelativePath), $layoutsDir);
 			$viewCore = \php\requires ($view);
 
-      $layoutName = !isset ($datas ['layout']) ? 'application' : (
-        str ($datas ['layout'])
-      );
+      if (!$layoutName && isset ($datas ['layout']) && is_string ($datas ['layout']) && !empty ($datas ['layout'])) {
+        $layoutName = $layoutsDir . str ($datas ['layout']) . '.cache.php';
+      }
 
-			$layoutCore = \php\requires (
-        $viewsDir.'/layouts/'.$layoutName.'.cache.php'
-      );
+      # $layoutName = !isset ($datas ['layout']) ? 'application' : (
+      #   str ($datas ['layout'])
+      # );
+
+			$layoutCore = requires ($layoutName);
 
       #exit ($viewsDir.'/layouts/'.$layoutName.'.cache.php');
 
@@ -133,6 +140,28 @@ namespace Sammy\Packs\Capsule {
 
       exit (0);
 		}
+
+    /**
+     * @method string
+     *
+     * getTemplateLayoutName
+     */
+    protected static function getTemplateLayoutName ($templateDirRelativePath, $layoutsDir) {
+      $templateDirRelativePath = join (DIRECTORY_SEPARATOR, [$templateDirRelativePath, 'index']);
+      $templateDirRelativePathSlices = preg_split ('/[\/\\\\]+/', $templateDirRelativePath);
+      $templateDirRelativePathSlicesCount = -1 + count ($templateDirRelativePathSlices);
+
+      for (; $templateDirRelativePathSlicesCount >= 0; $templateDirRelativePathSlicesCount--) {
+        $currentRelativePath = join (DIRECTORY_SEPARATOR, array_slice ($templateDirRelativePathSlices, 0, $templateDirRelativePathSlicesCount + 1));
+
+        $alternateLayoutPath = join (DIRECTORY_SEPARATOR, [$layoutsDir, $currentRelativePath]);
+
+        if (is_file ($alternateLayoutFilePath = join ('.', [$alternateLayoutPath, 'cache.php']))) {
+          return realpath ($alternateLayoutFilePath);
+        }
+      }
+
+    }
 	}}
 
 	$module->exports = (
